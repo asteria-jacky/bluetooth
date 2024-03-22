@@ -21,3 +21,5 @@ require (
 	golang.org/x/sys v0.11.0 // indirect
 	golang.org/x/term v0.11.0 // indirect
 )
+
+replace tinygo.org/x/bluetooth => github.com/asteria-jacky/bluetooth goroutine_leaks
