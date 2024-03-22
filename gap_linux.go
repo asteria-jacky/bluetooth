@@ -329,6 +329,7 @@ func (d *Device) watchForConnect() error {
 	if err != nil {
 		return err
 	}
+	defer d.device.UnwatchProperties(d.propchanged)
 
 	go func() {
 		for {
