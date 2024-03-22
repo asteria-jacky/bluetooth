@@ -1,4 +1,4 @@
-module tinygo.org/x/bluetooth
+module github.com/asteria-jacky/bluetooth
 
 go 1.18
 
