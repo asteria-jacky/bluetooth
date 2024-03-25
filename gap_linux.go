@@ -329,9 +329,9 @@ func (d *Device) watchForConnect() error {
 	if err != nil {
 		return err
 	}
-	defer d.device.UnwatchProperties(d.propchanged)
 
 	go func() {
+		defer d.device.UnwatchProperties(d.propchanged)
 		for {
 			select {
 			case changed := <-d.propchanged:
