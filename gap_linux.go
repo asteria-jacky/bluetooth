@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"strings"
+	"time"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/muka/go-bluetooth/api"
@@ -331,7 +332,7 @@ func (d *Device) watchForConnect() error {
 	}
 
 	go func() {
-		defer d.device.UnwatchProperties(d.propchanged)
+		defer d.unwatchForConnect()
 		for {
 			select {
 			case changed := <-d.propchanged:
@@ -361,4 +362,21 @@ func (d *Device) watchForConnect() error {
 	}()
 
 	return nil
+}
+
+func (d *Device) unwatchForConnect() {
+	if d.propchanged == nil {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	go func() {
+		select {
+		// drain the nil when UnwatchProperties(a, ch) to avoid goroutine leak
+		case <-d.propchanged:
+		// hacky: wait for at most 3 seconds
+		case <-ctx.Done():
+		}
+	}()
+	_ = d.device.UnwatchProperties(d.propchanged)
 }
